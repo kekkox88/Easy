@@ -220,9 +220,117 @@ class HLSProxy:
                     return self.extractors[key]
 
             # 2. Auto-detection basata sull'URL
-            key, info = get_extractor_by_url(url)
-            if key and info:
-                proxy = get_proxy_for_url(info["proxy_match"], TRANSPORT_ROUTES, GLOBAL_PROXIES)
+            if "vavoo.to" in url:
+                key = "vavoo"
+                proxy = get_proxy_for_url('vavoo.to', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = VavooExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif any(domain in url for domain in ["daddylive", "dlhd", "daddyhd", "dlstreams.top"]) or re.search(r'watch\.php\?id=\d+', url):
+                key = "dlhd"
+                # ✅ Support for new domain 'dlstreams.top' and improved proxy selection
+                domain_to_check = 'dlstreams.top' if 'dlstreams.top' in url else 'dlhd.dad'
+                proxy = get_proxy_for_url(domain_to_check, TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = DLHDExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif 'vixsrc.to/' in url.lower() and any(x in url for x in ['/movie/', '/tv/', '/iframe/']):
+                key = "vixsrc"
+                proxy = get_proxy_for_url('vixsrc.to', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = VixSrcExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif any(domain in url for domain in ["sportzonline", "sportsonline", "sprtsonline", "sportsnline"]):
+                key = "sportsonline"
+                proxy = get_proxy_for_url('sportsonline', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = SportsonlineExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "mixdrop" in url:
+                key = "mixdrop"
+                proxy = get_proxy_for_url('mixdrop', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = MixdropExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif any(d in url for d in ["voe.sx", "voe.to", "voe.st", "voe.eu", "voe.la", "voe-network.net"]):
+                key = "voe"
+                proxy = get_proxy_for_url('voe.sx', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = VoeExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "popcdn.day" in url:
+                key = "freeshot"
+                proxy = get_proxy_for_url('popcdn.day', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = FreeshotExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "streamtape.com" in url or "streamtape.to" in url or "streamtape.net" in url:
+                key = "streamtape"
+                proxy = get_proxy_for_url('streamtape', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = StreamtapeExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "orionoid.com" in url:
+                key = "orion"
+                proxy = get_proxy_for_url('orionoid.com', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = OrionExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            # --- New Extractors (URL auto-detection) ---
+            elif any(d in url for d in ["doodstream", "d000d.com", "dood.wf", "dood.cx", "dood.la", "dood.so", "dood.pm"]):
+                key = "doodstream"
+                proxy = get_proxy_for_url('doodstream', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = DoodStreamExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "fastream" in url:
+                key = "fastream"
+                proxy = get_proxy_for_url('fastream', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = FastreamExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "filelions" in url:
+                key = "filelions"
+                proxy = get_proxy_for_url('filelions', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = FileLionsExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "filemoon" in url:
+                key = "filemoon"
+                proxy = get_proxy_for_url('filemoon', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = FileMoonExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "lulustream" in url:
+                key = "lulustream"
+                proxy = get_proxy_for_url('lulustream', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = LuluStreamExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "maxstream" in url or "uprot.net" in url:
+                key = "maxstream"
+                proxy = get_proxy_for_url('maxstream', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+                proxy_list = [proxy] if proxy else []
+                if key not in self.extractors:
+                    self.extractors[key] = MaxstreamExtractor(request_headers, proxies=proxy_list)
+                return self.extractors[key]
+            elif "ok.ru" in url or "odnoklassniki" in url:
+                key = "okru"
+                proxy = get_proxy_for_url('ok.ru', TRANSPORT_ROUTES, GLOBAL_PROXIES)
                 proxy_list = [proxy] if proxy else []
                 if key not in self.extractors:
                     self.extractors[key] = info["class"](request_headers, proxies=proxy_list)
