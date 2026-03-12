@@ -35,167 +35,18 @@ if MPD_MODE == "legacy":
         logger = logging.getLogger(__name__)
         logger.warning(f"⚠️ MPD_MODE=legacy but modules not found: {e}")
 
-# --- Moduli Esterni ---
-VavooExtractor, DLHDExtractor, VixSrcExtractor, PlaylistBuilder, SportsonlineExtractor = None, None, None, None, None
-MixdropExtractor, VoeExtractor, StreamtapeExtractor, OrionExtractor, FreeshotExtractor = None, None, None, None, None
-# New extractors
-DoodStreamExtractor, FastreamExtractor, FileLionsExtractor, FileMoonExtractor, LuluStreamExtractor = None, None, None, None, None
-MaxstreamExtractor, OkruExtractor, StreamWishExtractor, SupervideoExtractor, UqloadExtractor = None, None, None, None, None
-VidmolyExtractor, VidozaExtractor, TurboVidPlayExtractor, LiveTVExtractor, F16PxExtractor = None, None, None, None, None
+# --- Extractor Registry (auto-discovers all extractors) ---
+from extractors import EXTRACTOR_REGISTRY, get_extractor_by_host, get_extractor_by_url
 
 logger = logging.getLogger(__name__)
 
-# Importazione condizionale degli estrattori
-try:
-    from extractors.freeshot import FreeshotExtractor
-    logger.info("✅ FreeshotExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ FreeshotExtractor module not found.")
-
-try:
-    from extractors.vavoo import VavooExtractor
-    logger.info("✅ VavooExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ VavooExtractor module not found. Vavoo functionality disabled.")
-
-try:
-    from extractors.dlhd import DLHDExtractor
-    logger.info("✅ DLHDExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ DLHDExtractor module not found. DLHD functionality disabled.")
-
+# PlaylistBuilder (separate from extractors)
+PlaylistBuilder = None
 try:
     from routes.playlist_builder import PlaylistBuilder
-    logger.info("✅ PlaylistBuilder module loaded.")
+    logger.info("PlaylistBuilder module loaded.")
 except ImportError:
-    logger.warning("⚠️ PlaylistBuilder module not found. PlaylistBuilder functionality disabled.")
-    
-try:
-    from extractors.vixsrc import VixSrcExtractor
-    logger.info("✅ VixSrcExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ VixSrcExtractor module not found. VixSrc functionality disabled.")
-
-try:
-    from extractors.sportsonline import SportsonlineExtractor
-    logger.info("✅ SportsonlineExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ SportsonlineExtractor module not found. Sportsonline functionality disabled.")
-
-try:
-    from extractors.mixdrop import MixdropExtractor
-    logger.info("✅ MixdropExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ MixdropExtractor module not found.")
-
-try:
-    from extractors.voe import VoeExtractor
-    logger.info("✅ VoeExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ VoeExtractor module not found.")
-
-try:
-    from extractors.streamtape import StreamtapeExtractor
-    logger.info("✅ StreamtapeExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ StreamtapeExtractor module not found.")
-
-try:
-    from extractors.orion import OrionExtractor
-    logger.info("✅ OrionExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ OrionExtractor module not found.")
-
-# --- New Extractors ---
-try:
-    from extractors.doodstream import DoodStreamExtractor
-    logger.info("✅ DoodStreamExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ DoodStreamExtractor module not found.")
-
-try:
-    from extractors.fastream import FastreamExtractor
-    logger.info("✅ FastreamExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ FastreamExtractor module not found.")
-
-try:
-    from extractors.filelions import FileLionsExtractor
-    logger.info("✅ FileLionsExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ FileLionsExtractor module not found.")
-
-try:
-    from extractors.filemoon import FileMoonExtractor
-    logger.info("✅ FileMoonExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ FileMoonExtractor module not found.")
-
-try:
-    from extractors.lulustream import LuluStreamExtractor
-    logger.info("✅ LuluStreamExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ LuluStreamExtractor module not found.")
-
-try:
-    from extractors.maxstream import MaxstreamExtractor
-    logger.info("✅ MaxstreamExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ MaxstreamExtractor module not found.")
-
-try:
-    from extractors.okru import OkruExtractor
-    logger.info("✅ OkruExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ OkruExtractor module not found.")
-
-try:
-    from extractors.streamwish import StreamWishExtractor
-    logger.info("✅ StreamWishExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ StreamWishExtractor module not found.")
-
-try:
-    from extractors.supervideo import SupervideoExtractor
-    logger.info("✅ SupervideoExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ SupervideoExtractor module not found.")
-
-try:
-    from extractors.uqload import UqloadExtractor
-    logger.info("✅ UqloadExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ UqloadExtractor module not found.")
-
-try:
-    from extractors.vidmoly import VidmolyExtractor
-    logger.info("✅ VidmolyExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ VidmolyExtractor module not found.")
-
-try:
-    from extractors.vidoza import VidozaExtractor
-    logger.info("✅ VidozaExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ VidozaExtractor module not found.")
-
-try:
-    from extractors.turbovidplay import TurboVidPlayExtractor
-    logger.info("✅ TurboVidPlayExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ TurboVidPlayExtractor module not found.")
-
-try:
-    from extractors.livetv import LiveTVExtractor
-    logger.info("✅ LiveTVExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ LiveTVExtractor module not found.")
-
-try:
-    from extractors.f16px import F16PxExtractor
-    logger.info("✅ F16PxExtractor module loaded.")
-except ImportError:
-    logger.warning("⚠️ F16PxExtractor module not found.")
+    logger.warning("PlaylistBuilder module not found.")
 
 class HLSProxy:
     """Proxy HLS per gestire stream Vavoo, DLHD, HLS generici e playlist builder con supporto AES-128"""
@@ -358,288 +209,30 @@ class HLSProxy:
 
 
     async def get_extractor(self, url: str, request_headers: dict, host: str = None):
-        """Ottiene l'estrattore appropriato per l'URL"""
+        """Ottiene l'estrattore appropriato per l'URL usando il registry pattern."""
         try:
-            # 1. Selezione Manuale tramite parametro 'host'
+            # 1. Selezione manuale tramite parametro 'host'
             if host:
-                host = host.lower()
-                key = host
-
-                if host == "vavoo":
+                key, info = get_extractor_by_host(host)
+                if key and info:
                     if key not in self.extractors:
-                        self.extractors[key] = VavooExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host in ["dlhd", "daddylive", "daddyhd"]:
-                    key = "dlhd"
-                    if key not in self.extractors:
-                        self.extractors[key] = DLHDExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "vixsrc":
-                    if key not in self.extractors:
-                        self.extractors[key] = VixSrcExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host in ["sportsonline", "sportzonline", "sprtsonline", "sportsnline"]:
-                    key = "sportsonline"
-                    if key not in self.extractors:
-                        self.extractors[key] = SportsonlineExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "mixdrop":
-                    if key not in self.extractors:
-                        self.extractors[key] = MixdropExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "voe":
-                    if key not in self.extractors:
-                        self.extractors[key] = VoeExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "streamtape":
-                    if key not in self.extractors:
-                        self.extractors[key] = StreamtapeExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "orion":
-                    if key not in self.extractors:
-                        self.extractors[key] = OrionExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "freeshot":
-                    if key not in self.extractors:
-                        self.extractors[key] = FreeshotExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                # --- New Extractors (host selection) ---
-                elif host in ["doodstream", "dood", "d000d"]:
-                    key = "doodstream"
-                    if key not in self.extractors:
-                        self.extractors[key] = DoodStreamExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "fastream":
-                    if key not in self.extractors:
-                        self.extractors[key] = FastreamExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "filelions":
-                    if key not in self.extractors:
-                        self.extractors[key] = FileLionsExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "filemoon":
-                    if key not in self.extractors:
-                        self.extractors[key] = FileMoonExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "lulustream":
-                    if key not in self.extractors:
-                        self.extractors[key] = LuluStreamExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "maxstream":
-                    if key not in self.extractors:
-                        self.extractors[key] = MaxstreamExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host in ["okru", "ok.ru"]:
-                    key = "okru"
-                    if key not in self.extractors:
-                        self.extractors[key] = OkruExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "streamwish":
-                    if key not in self.extractors:
-                        self.extractors[key] = StreamWishExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "supervideo":
-                    if key not in self.extractors:
-                        self.extractors[key] = SupervideoExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "uqload":
-                    if key not in self.extractors:
-                        self.extractors[key] = UqloadExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "vidmoly":
-                    if key not in self.extractors:
-                        self.extractors[key] = VidmolyExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host in ["vidoza", "videzz"]:
-                    key = "vidoza"
-                    if key not in self.extractors:
-                        self.extractors[key] = VidozaExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host in ["turbovidplay", "turboviplay", "emturbovid"]:
-                    key = "turbovidplay"
-                    if key not in self.extractors:
-                        self.extractors[key] = TurboVidPlayExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "livetv":
-                    if key not in self.extractors:
-                        self.extractors[key] = LiveTVExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                    return self.extractors[key]
-                elif host == "f16px":
-                    if key not in self.extractors:
-                        self.extractors[key] = F16PxExtractor(request_headers, proxies=GLOBAL_PROXIES)
+                        self.extractors[key] = info["class"](request_headers, proxies=GLOBAL_PROXIES)
                     return self.extractors[key]
 
             # 2. Auto-detection basata sull'URL
-            if "vavoo.to" in url:
-                key = "vavoo"
-                proxy = get_proxy_for_url('vavoo.to', TRANSPORT_ROUTES, GLOBAL_PROXIES)
+            key, info = get_extractor_by_url(url)
+            if key and info:
+                proxy = get_proxy_for_url(info["proxy_match"], TRANSPORT_ROUTES, GLOBAL_PROXIES)
                 proxy_list = [proxy] if proxy else []
                 if key not in self.extractors:
-                    self.extractors[key] = VavooExtractor(request_headers, proxies=proxy_list)
+                    self.extractors[key] = info["class"](request_headers, proxies=proxy_list)
                 return self.extractors[key]
-            elif any(domain in url for domain in ["daddylive", "dlhd", "daddyhd"]) or re.search(r'watch\.php\?id=\d+', url):
-                key = "dlhd"
-                proxy = get_proxy_for_url('dlhd.dad', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = DLHDExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif 'vixsrc.to/' in url.lower() and any(x in url for x in ['/movie/', '/tv/', '/iframe/']):
-                key = "vixsrc"
-                proxy = get_proxy_for_url('vixsrc.to', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = VixSrcExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif any(domain in url for domain in ["sportzonline", "sportsonline", "sprtsonline", "sportsnline"]):
-                key = "sportsonline"
-                proxy = get_proxy_for_url('sportsonline', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = SportsonlineExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "mixdrop" in url:
-                key = "mixdrop"
-                proxy = get_proxy_for_url('mixdrop', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = MixdropExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif any(d in url for d in ["voe.sx", "voe.to", "voe.st", "voe.eu", "voe.la", "voe-network.net"]):
-                key = "voe"
-                proxy = get_proxy_for_url('voe.sx', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = VoeExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "popcdn.day" in url:
-                key = "freeshot"
-                proxy = get_proxy_for_url('popcdn.day', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = FreeshotExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "streamtape.com" in url or "streamtape.to" in url or "streamtape.net" in url:
-                key = "streamtape"
-                proxy = get_proxy_for_url('streamtape', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = StreamtapeExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "orionoid.com" in url:
-                key = "orion"
-                proxy = get_proxy_for_url('orionoid.com', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = OrionExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            # --- New Extractors (URL auto-detection) ---
-            elif any(d in url for d in ["doodstream", "d000d.com", "dood.wf", "dood.cx", "dood.la", "dood.so", "dood.pm"]):
-                key = "doodstream"
-                proxy = get_proxy_for_url('doodstream', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = DoodStreamExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "fastream" in url:
-                key = "fastream"
-                proxy = get_proxy_for_url('fastream', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = FastreamExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "filelions" in url:
-                key = "filelions"
-                proxy = get_proxy_for_url('filelions', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = FileLionsExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "filemoon" in url:
-                key = "filemoon"
-                proxy = get_proxy_for_url('filemoon', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = FileMoonExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "lulustream" in url:
-                key = "lulustream"
-                proxy = get_proxy_for_url('lulustream', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = LuluStreamExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "maxstream" in url or "uprot.net" in url:
-                key = "maxstream"
-                proxy = get_proxy_for_url('maxstream', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = MaxstreamExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "ok.ru" in url or "odnoklassniki" in url:
-                key = "okru"
-                proxy = get_proxy_for_url('ok.ru', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = OkruExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif any(d in url for d in ["streamwish", "swish", "wishfast", "embedwish", "wishembed"]):
-                key = "streamwish"
-                proxy = get_proxy_for_url('streamwish', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = StreamWishExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "supervideo" in url:
-                key = "supervideo"
-                proxy = get_proxy_for_url('supervideo', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = SupervideoExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "uqload" in url and not any(url.endswith(ext) or f"{ext}?" in url for ext in (".mp4", ".m3u8", ".ts", ".mkv", ".avi", ".mpd")):
-                # Only match embed pages (e.g. uqload.is/abc123.html), not CDN video URLs (m80.uqload.is/.../v.mp4)
-                key = "uqload"
-                proxy = get_proxy_for_url('uqload', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = UqloadExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "vidmoly" in url:
-                key = "vidmoly"
-                proxy = get_proxy_for_url('vidmoly', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = VidmolyExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "vidoza" in url or "videzz" in url:
-                key = "vidoza"
-                proxy = get_proxy_for_url('vidoza', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = VidozaExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif any(d in url for d in ["turboviplay", "emturbovid", "tuborstb", "javggvideo", "stbturbo", "turbovidhls"]):
-                key = "turbovidplay"
-                proxy = get_proxy_for_url('turbovidplay', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = TurboVidPlayExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            elif "/e/" in url and any(d in url for d in ["f16px", "embedme", "embedsb", "playersb"]):
-                key = "f16px"
-                proxy = get_proxy_for_url('f16px', TRANSPORT_ROUTES, GLOBAL_PROXIES)
-                proxy_list = [proxy] if proxy else []
-                if key not in self.extractors:
-                    self.extractors[key] = F16PxExtractor(request_headers, proxies=proxy_list)
-                return self.extractors[key]
-            else:
-                # ✅ MODIFICATO: Fallback al GenericHLSExtractor per qualsiasi altro URL.
-                # Questo permette di gestire estensioni sconosciute o URL senza estensione.
-                key = "hls_generic"
-                if key not in self.extractors:
-                    self.extractors[key] = GenericHLSExtractor(request_headers, proxies=GLOBAL_PROXIES)
-                return self.extractors[key]
+
+            # 3. Fallback al GenericHLSExtractor
+            key = "hls_generic"
+            if key not in self.extractors:
+                self.extractors[key] = GenericHLSExtractor(request_headers, proxies=GLOBAL_PROXIES)
+            return self.extractors[key]
         except (NameError, TypeError) as e:
             raise ExtractorError(f"Extractor not available - module missing: {e}")
 
